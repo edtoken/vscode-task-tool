@@ -28,7 +28,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:tasktool.list"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -40,6 +40,10 @@
             {
                 "command": "tasktool.list",
                 "title": "TaskTool: List"
+            },
+            {
+                "command": "tasktool.open",
+                "title": "TaskTool: Open Issue"
             },
             {
                 "command": "tasktool.close",

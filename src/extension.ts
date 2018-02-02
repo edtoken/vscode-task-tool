@@ -1,23 +1,35 @@
 'use strict';
 import * as vscode from 'vscode';
 
-import {COMMANDS} from './commands'
+import {
+    TestConnectionCommand, 
+    TaskListCommand, 
+    TaskOpenIssueCommand, 
+    TaskCloseIssueCommand
+} from './commands'
+
+import { log } from 'util';
 
 function activate(_context) {
     
     const context = _context;
     const workspaceState = context.workspaceState;
-    const channel = vscode.window.createOutputChannel('TASKTOOL');
+    const channel = vscode.window.createOutputChannel('tasktool');
 
     context.subscriptions.push(channel);
 
-    // register commands
-    for(let commandName in COMMANDS){
-        context.subscriptions.push(vscode.commands.registerCommand(commandName, COMMANDS[commandName])) 
-    }
+    const commands = [
+        new TestConnectionCommand(),
+        new TaskListCommand(),
+        new TaskOpenIssueCommand(),
+        new TaskCloseIssueCommand()
+    ]
 
-    // test connection to task tracker
-    // vscode.commands.executeCommand('tasktool.test-connection')
+    context.subscriptions.push(
+        ...commands.map(
+            command => vscode.commands.registerCommand(command.id, command.run)
+        )
+    );
 }
 
 function deactivate() {

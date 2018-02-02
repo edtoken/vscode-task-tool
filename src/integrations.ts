@@ -18,6 +18,10 @@ class Integration {
     protected readonly _issueItemUrl: string 
     protected readonly _issueItemUpdateUrl: string 
 
+    constructor(){
+        
+    }
+
     protected login(){
 
     }
@@ -55,4 +59,6 @@ class YouTrack extends Integration {
 export const MakeInstance = () => {
     const config = getConfiguration()
     console.log('config', config)
+    
+    return new Integration()
 }
