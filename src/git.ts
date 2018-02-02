@@ -1,4 +1,8 @@
+'use strict';
+import * as vscode from 'vscode';
+
 class Git {
+    
     public branch(branchName: string) {
 
     }

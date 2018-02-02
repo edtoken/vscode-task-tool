@@ -1,3 +1,7 @@
+'use strict';
+import * as vscode from 'vscode';
+
+import {getConfiguration} from './configuration'
 import {Issue, JiraIssue, YouTrackIssue} from './issue'
 
 class Integration {
@@ -29,6 +33,10 @@ class Integration {
     protected updateIssueById(id: string){
 
     }
+
+    public test(){
+        console.log('TEST')
+    }
 }
 
 class Jira extends Integration {
@@ -42,4 +50,9 @@ class YouTrack extends Integration {
     protected readonly _issueListUrl: string = "/rest/issue?filter={filter}"
     protected readonly _issueItemUrl: string = "/rest/issue/{issueId}"
     protected readonly _issueItemUpdateUrl: string = "/rest/issue/{issueId}/execute?command={command}"
+}
+
+export const MakeInstance = () => {
+    const config = getConfiguration()
+    console.log('config', config)
 }
