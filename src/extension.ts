@@ -1,39 +1,39 @@
-'use strict';
-import * as vscode from 'vscode';
+"use strict";
+import * as vscode from "vscode";
 
 import {
-    TestConnectionCommand, 
-    TaskListCommand, 
-    TaskOpenIssueCommand, 
-    TaskCloseIssueCommand
-} from './commands'
+  TestConnectionCommand,
+  TaskListCommand,
+  TaskOpenIssueCommand,
+  TaskCloseIssueCommand
+} from "./commands";
 
-import { log } from 'util';
+import { log } from "util";
 
 function activate(_context) {
-    
-    const context = _context;
-    const workspaceState = context.workspaceState;
-    const channel = vscode.window.createOutputChannel('tasktool');
 
-    context.subscriptions.push(channel);
+  const context = _context;
+  const workspaceState = context.workspaceState;
+  const channel = vscode.window.createOutputChannel("tasktool");
+  context.subscriptions.push(channel);
 
-    const commands = [
-        new TestConnectionCommand(),
-        new TaskListCommand(),
-        new TaskOpenIssueCommand(),
-        new TaskCloseIssueCommand()
-    ]
+  const config = vscode.workspace.getConfiguration('tasktool');
 
-    context.subscriptions.push(
-        ...commands.map(
-            command => vscode.commands.registerCommand(command.id, command.run)
-        )
-    );
+  const commands = [
+    new TestConnectionCommand(),
+    new TaskListCommand(),
+    new TaskOpenIssueCommand(),
+    new TaskCloseIssueCommand()
+  ];
+
+  context.subscriptions.push(
+    ...commands.map(command =>
+      vscode.commands.registerCommand(command.id, command.run)
+    )
+  );
 }
 
-function deactivate() {
-}
+function deactivate() {}
 
 exports.activate = activate;
 exports.deactivate = deactivate;

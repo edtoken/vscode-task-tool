@@ -1,37 +1,20 @@
-'use strict';
-import * as vscode from 'vscode';
+"use strict";
+import * as vscode from "vscode";
 
 class Git {
-    
-    public branch(branchName: string) {
+  public branch(branchName: string) {}
 
-    }
+  public checkout(branchName: string) {}
 
-    public checkout(branchName: string) {
+  public merge(branchName: string) {}
 
-    }
+  public commit(commitMessage: string) {}
 
-    public merge(branchName: string) {
+  public pull() {}
 
-    }
+  public push(force: boolean = false) {}
 
-    public commit(commitMessage: string){
+  public getCurrentBranch() {}
 
-    }
-    
-    public pull(){
-
-    }
-    
-    public push(force: boolean = false){
-
-    }
-
-    public getCurrentBranch(){
-
-    }
-
-    public deleteBranch(branchName: string){
-
-    }
+  public deleteBranch(branchName: string) {}
 }

@@ -1,24 +1,26 @@
-'use strict';
-import {getConfiguration} from './configuration'
-
+"use strict";
+import * as vscode from "vscode";
+import { makeInstance } from "./integrations";
 export interface Command<T = void> {
-    id: string;
-    configuration: object
-  
-    run(...args: any[]): T | Promise<T>;
+  id: string;
+
+  run(...args: any[]): T | Promise<T>;
 }
 
 export class TestConnectionCommand implements Command {
+  public id = "tasktool.test-connection";
 
-  public id = 'tasktool.test-connection';
-  public configuration = undefined
-
-  constructor(){
-    this.run = this.run.bind(this)
+  constructor() {
+    this.run = this.run.bind(this);
   }
 
-  public async run(preselected: Issue | null): Promise<void> {
-    this.configuration = getConfiguration()
+  public async run(): Promise<void> {
+    return makeInstance()
+      .test()
+      .then(() => {
+        vscode.window.showInformationMessage("Connection succeful");
+      })
+      .catch((err: string) => vscode.window.showErrorMessage(err));
   }
 
   // private async selectIssue(preselected: Issue | null): Promise<Issue | null | undefined> {
@@ -29,48 +31,40 @@ export class TestConnectionCommand implements Command {
   //   const name = activateIssue ? `Deactivate ${activateIssue.key}` : undefined;
   //   return await vscode.commands.executeCommand<Issue | undefined | null>('vscode-jira.listMyIssues', name);
   // }
-
 }
 
 export class TaskListCommand implements Command {
+  public id = "tasktool.list";
 
-  public id = 'tasktool.list';
-  public configuration = undefined
-
-  constructor(){
-    this.run = this.run.bind(this)
+  constructor() {
+    this.run = this.run.bind(this);
   }
-  
-  public async run(preselected: Issue | null): Promise<void> {
-    this.configuration = getConfiguration()
+
+  public async run(preselected): Promise<void> {
+    // this.configuration = getConfiguration()
   }
 }
 
-
 export class TaskOpenIssueCommand implements Command {
+  public id = "tasktool.open";
 
-  public id = 'tasktool.open';
-  public configuration = undefined
-
-  constructor(){
-    this.run = this.run.bind(this)
+  constructor() {
+    this.run = this.run.bind(this);
   }
-  
-  public async run(preselected: Issue | null): Promise<void> {
-    this.configuration = getConfiguration()
+
+  public async run(preselected): Promise<void> {
+    // this.configuration = getConfiguration()
   }
 }
 
 export class TaskCloseIssueCommand implements Command {
+  public id = "tasktool.close";
 
-  public id = 'tasktool.close';
-  public configuration = undefined
-
-  constructor(){
-    this.run = this.run.bind(this)
+  constructor() {
+    this.run = this.run.bind(this);
   }
-  
-  public async run(preselected: Issue | null): Promise<void> {
-    this.configuration = getConfiguration()
+
+  public async run(preselected): Promise<void> {
+    // this.configuration = getConfiguration()
   }
 }
