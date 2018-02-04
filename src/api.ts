@@ -42,8 +42,6 @@ export class Api {
         }
       };
 
-      console.log("options", options);
-
       const postReq = this.https.request(options, function(res) {
         res.setEncoding("utf8");
         let data = "";
@@ -51,30 +49,43 @@ export class Api {
           data += chunk;
         });
         res.on("end", function() {
-          //   if (loginRequest) {
-          //     self.cookie = res.headers["set-cookie"];
-          //     if (data === "<login>ok</login>") {
-          //       self._login = true;
-          //       resolve(data);
-          //     }
-          //   } else
-
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            return reject([data, res]);
+          }
           resolve([data, res]);
+        });
+
+        res.on("error", function(e) {
+          return reject([data, res]);
+        });
+
+        res.on("timeout", function(e) {
+          return reject([data, res]);
         });
       });
       postReq.end();
     });
   }
-  public get(url: string, query: object = {}) {
-    return this._call("get", url, undefined, query);
+  public get(url: string, query: object = {}, headers: object = {}) {
+    return this._call("get", url, undefined, query, headers);
   }
-  public post(url: string, body: object = {}, query: object = {}) {
-    return this._call("post", url, body, query);
+  public post(
+    url: string,
+    body: object = {},
+    query: object = {},
+    headers: object = {}
+  ) {
+    return this._call("post", url, body, query, headers);
   }
-  public put(url: string, body: object = {}, query: object = {}) {
-    return this._call("put", url, body, query);
+  public put(
+    url: string,
+    body: object = {},
+    query: object = {},
+    headers: object = {}
+  ) {
+    return this._call("put", url, body, query, headers);
   }
-  public del(url: string, query: object = {}) {
-    return this._call("delete", url, undefined, query);
+  public del(url: string, query: object = {}, headers: object = {}) {
+    return this._call("delete", url, undefined, query, headers);
   }
 }

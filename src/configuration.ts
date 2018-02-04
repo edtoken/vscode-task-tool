@@ -6,6 +6,10 @@ export interface Configuration {
   userName: string;
   userPassword: string;
   searchQuery: string;
+
+  priorityField: string;
+  stateField: string;
+  assigneeField: string;
 }
 
 export function getConfiguration(): Configuration {
