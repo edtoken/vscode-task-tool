@@ -50,7 +50,8 @@ export class Api {
         });
         res.on("end", function() {
           if (res.statusCode < 200 || res.statusCode >= 300) {
-            return reject([data, res]);
+            reject([data, res]);
+            return;
           }
           resolve([data, res]);
         });

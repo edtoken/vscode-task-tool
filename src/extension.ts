@@ -4,14 +4,13 @@ import * as vscode from "vscode";
 import {
   TestConnectionCommand,
   TaskListCommand,
-  TaskOpenIssueCommand,
-  TaskCloseIssueCommand,
-  TaskOpenIssueInBrowserCommand
+  TaskStartIssueCommand,
+  TaskStopIssueCommand,
+  TaskOpenIssueInBrowserCommand,
+  TaskUpdatePanelCommand
 } from "./commands";
 
-import { TDPanelProvider } from "./panel";
-
-import { log } from "util";
+import { TDPanelProvider } from "./td-provider";
 
 function activate(_context) {
   const context = _context;
@@ -21,20 +20,12 @@ function activate(_context) {
 
   const config = vscode.workspace.getConfiguration("tasktool");
 
-  const commands = [
-    new TestConnectionCommand(),
-    new TaskListCommand(),
-    new TaskOpenIssueCommand(),
-    new TaskCloseIssueCommand(),
-    new TaskOpenIssueInBrowserCommand()
-  ];
-
   // plugin panel
-  const registration = vscode.workspace.registerTextDocumentContentProvider(
+  const panel = vscode.workspace.registerTextDocumentContentProvider(
     "css-preview",
     new TDPanelProvider()
   );
-  context.subscriptions.push(registration);
+  context.subscriptions.push(panel);
 
   // statusbar button
   const status = vscode.window.createStatusBarItem(
@@ -45,6 +36,15 @@ function activate(_context) {
   status.text = "TaskTool List";
   status.show();
   context.subscriptions.push(status);
+
+  const commands = [
+    new TestConnectionCommand(status, panel),
+    new TaskListCommand(status, panel),
+    new TaskStartIssueCommand(status, panel),
+    new TaskStopIssueCommand(status, panel),
+    new TaskOpenIssueInBrowserCommand(status, panel),
+    new TaskUpdatePanelCommand(status, panel)
+  ];
 
   context.subscriptions.push(
     ...commands.map(command =>

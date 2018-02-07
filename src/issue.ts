@@ -1,6 +1,7 @@
 "use strict";
 import * as vscode from "vscode";
 import { Configuration } from "./configuration";
+import * as store from "./store";
 
 export class Issue {
   protected _data: object;
@@ -8,8 +9,6 @@ export class Issue {
   constructor(id, data) {
     this._data = data;
   }
-
-  fetch() {}
 }
 
 export class JiraIssue extends Issue {}
@@ -28,7 +27,15 @@ export class YouTrackIssue extends Issue {
   }
 
   public get id(): string {
-    return this._data.$.id;
+    return this._data["$"].id.trim().toLowerCase();
+  }
+
+  public get isActive(): boolean {
+    const currentTaskBranch = store
+      .get("currentBranch")
+      .split("/")
+      .pop();
+    return currentTaskBranch === this.id;
   }
 
   public get url(): string {

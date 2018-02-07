@@ -1,6 +1,10 @@
 import * as fs from "fs";
 
 const defaultRegistryJSON = {
+  tasks: [
+    // {parentBranch, taskId, branchName, works:[{from:timestamp, to:timestamp}, {from, to}]}
+  ],
+  currentBranch: "",
   issues: []
 };
 

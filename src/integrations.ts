@@ -41,20 +41,24 @@ class Integration {
     this._api = new Api(this._serverUrl, this._basePath);
   }
 
-  protected login(): Promise {}
+  protected login(): Promise<void | string> {
+    return undefined;
+  }
 
-  protected ensureLogin(): Promise {
-    if (this._logged) return this.Promise.resolve();
+  protected ensureLogin(): Promise<void> {
+    if (this._logged) return Promise.resolve();
     return this.login()
       .then(() => Promise.resolve())
       .catch(err => Promise.reject(err));
   }
 
-  public getIssueList(): Promise {}
+  public getIssueList() {}
 
   public getIssueById(id: string) {}
 
   public updateIssueById(id: string) {}
+
+  public updateIssueStatusById(id: string, status: string) {}
 
   public test() {
     return new Promise((resolve, reject) => {
@@ -73,7 +77,7 @@ class YouTrack extends Integration {
   protected readonly _issueItemUrl: string = "/rest/issue/{issueId}";
   protected readonly _issueItemUpdateUrl: string = "/rest/issue/{issueId}/execute?command={command}";
 
-  protected login(): Promise {
+  protected login(): Promise<void | string> {
     return new Promise((resolve, reject) => {
       const loginUrl = this._loginUrl
         .replace("{login}", encodeURIComponent(this._userName))
@@ -89,7 +93,7 @@ class YouTrack extends Integration {
             this._headers = {
               Cookie: res.headers["set-cookie"]
             };
-            return resolve(data);
+            return resolve();
           }
 
           reject(`Login Error: ${data}`);
@@ -102,7 +106,41 @@ class YouTrack extends Integration {
     });
   }
 
-  public getIssueList(): Promise {
+  public updateIssueStatusById(
+    id: string,
+    status: string
+  ): Promise<string | object> {
+    return new Promise((resolve, reject) => {
+      const config = vscode.workspace.getConfiguration("tasktool");
+      const stateField = config.get("stateField", "state");
+
+      this.ensureLogin()
+        .then(() => {
+          resolve();
+          return;
+
+          this._api
+            .post(
+              `/rest/issue/${id}/execute?command=${encodeURIComponent(
+                stateField + " " + status
+              )}`,
+              undefined,
+              undefined,
+              this._headers
+            )
+            .then(data => {
+              resolve(data);
+            })
+            .catch(err => {
+              const [error, res] = err;
+              reject(error);
+            });
+        })
+        .catch((err: string) => reject(err));
+    });
+  }
+
+  public getIssueList(): Promise<object> {
     const self = this;
 
     return new Promise((resolve, reject) => {
